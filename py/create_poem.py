@@ -11,7 +11,7 @@ import json
 import sys
 import argparse
 
-# These bottom two lines are only used when I delpy this srcript on my RaspberryPi server
+# These bottom two lines are only used when I deploy this script on my RaspberryPi server
 import nltk
 nltk.data.path.append("/home/pi/nltk_data")
 
@@ -41,19 +41,18 @@ consumer_secret = 'IhW5jrCDf42Zz6Cd93qkB9faUEixPmb6kUGEJg8AGd22OTsF02'
 access_token = '1136751418201837568-rJcG56DNfek9wClV63VlOI5eAEq2Gp'
 access_secret = '1PrHTj8V26Y3TXVzfaHsIa3Sb1TE5ULUihIbukiwzh5pI'
 
-# Instantiate an object
+# Instantiate the API object
 twit = Twython(consumer_key, consumer_secret)
 
 
 def twitSearch(query, count):
     # Create our query
-    query = {'q': args.q,
+    query = {'q': query,
              'result_type': 'popular',
              'count': num_posts,
              'lang': 'en',
              'tweet_mode': 'extended'
              }
-    # twit.search(**query)['statuses']
 
     # Search tweets
     d = {'user': [], 'date': [], 'text': [], 'favorite_count': []}
@@ -69,7 +68,8 @@ def twitSearch(query, count):
 
 # We will use pandas to visualize and modify our data. It will make our life easier.
 
-df = twitSearch('joy happiness', 10)
+df = twitSearch(args.q, 10)
+
 df.sort_values(by='favorite_count', inplace=True, ascending=False)
 
 
@@ -105,8 +105,6 @@ df['filtered_text'] = filtered_list
 
 
 # Let's filter out the stop words
-
-# nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
 l = []
 for i in df['filtered_text']:

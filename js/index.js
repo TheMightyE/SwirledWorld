@@ -9,14 +9,18 @@ function fetchReq(content) {
         console.log(
           "Looks like there was a problem. Status Code: " + response.status
         );
-        $("#loading").hide();
 
         return;
       }
-
+      $("#loading").hide();
       // Examine the text in the response
       response.json().then(function(data) {
         $("#loading").hide();
+        if (data.error) {
+          alert(
+            "Whoops! No poem was able to be constructed with your query. Please try again with a different one."
+          );
+        }
         showPoem(data);
       });
     })
